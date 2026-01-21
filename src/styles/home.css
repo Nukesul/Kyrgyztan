@@ -175,7 +175,7 @@ body {
   overflow-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
-  white-space: normal;
+  white-space: pre-line; /* Улучшенные переносы строк */
 }
 
 /* Панель месяцев — улучшенная адаптивность, профессиональный вид */

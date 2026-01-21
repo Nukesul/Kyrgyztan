@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=B612:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
 :root {
   --vh: 1vh;
@@ -11,7 +11,7 @@
 }
 
 body {
-  font-family: 'B612', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
   color: #fff;
   background: #000;
   overflow: hidden;
@@ -112,13 +112,14 @@ body {
   pointer-events: none;
 }
 
-/* Текст — адаптивный с clamp, милый шрифт и объём */
+/* Текст — адаптивный с clamp, серьёзный шрифт Montserrat */
 .title-corner {
   position: absolute;
   top: clamp(130px, 18vh, 160px);
   left: clamp(1rem, 4vw, 3rem);
   z-index: 2;
   max-width: clamp(300px, 80vw, 600px);
+  padding-right: clamp(1rem, 4vw, 3rem);
 }
 
 .title-group {
@@ -145,7 +146,7 @@ body {
 }
 
 .main-title {
-  font-family: 'Caveat', cursive;
+  font-family: 'Montserrat', sans-serif;
   font-size: clamp(2.8rem, 8vw, 4.5rem);
   font-weight: 700;
   line-height: 1.1;
@@ -155,24 +156,28 @@ body {
 }
 
 .subtitle {
-  font-family: 'Caveat', cursive;
+  font-family: 'Montserrat', sans-serif;
   font-size: clamp(1.3rem, 4vw, 1.6rem);
-  font-weight: 400;
+  font-weight: 500;
   opacity: 0.92;
   margin-bottom: 1rem;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .description {
+  font-family: 'Montserrat', sans-serif;
   font-size: clamp(1rem, 3vw, 1.4rem);
   font-weight: 400;
   opacity: 0.85;
-  line-height: 1.5;
+  line-height: 1.4;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  max-width: 90%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
-/* Панель месяцев — адаптивная */
+/* Панель месяцев — улучшенная адаптивность, профессиональный вид */
 .months-bar {
   position: absolute;
   bottom: 0;
@@ -186,7 +191,7 @@ body {
 
 .months-scroll {
   display: flex;
-  gap: clamp(1rem, 4vw, 2.2rem);
+  gap: clamp(0.8rem, 3vw, 2.2rem);
   overflow-x: auto;
   padding: 0.5rem 0;
   scrollbar-width: none;
@@ -194,42 +199,47 @@ body {
   position: relative;
   scroll-behavior: smooth;
   will-change: scroll-position;
-  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
-  scroll-snap-type: x proximity; /* Легкий snap */
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
 }
 
 .months-scroll::-webkit-scrollbar { display: none; }
 
 .month-btn {
-  background: none;
+  background: rgba(255, 255, 255, 0.1);
   border: none;
+  border-radius: 8px;
   color: #fff;
+  font-family: 'Montserrat', sans-serif;
   font-size: clamp(0.95rem, 3.5vw, 1.15rem);
   font-weight: 500;
   padding: clamp(0.6rem, 2.5vw, 0.7rem) clamp(1rem, 3.5vw, 1.2rem);
   cursor: pointer;
   white-space: nowrap;
   position: relative;
-  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.4s ease, background 0.3s ease;
   opacity: 0.9;
   flex-shrink: 0;
-  will-change: transform, color;
-  min-width: 60px; /* Удобнее нажимать на мобильных */
+  will-change: transform, color, background;
+  min-width: clamp(70px, 15vw, 120px);
   scroll-snap-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .month-btn:hover,
 .month-btn:focus {
   opacity: 1;
   color: #FFD100;
-  transform: scale(1.08);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
   outline: none;
 }
 
 .month-btn.active {
   color: #ff1100;
   font-weight: 700;
-  transform: scale(1.08);
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .month-btn.active::after {
@@ -250,7 +260,7 @@ body {
   position: sticky;
   right: 0;
   margin-left: auto;
-  padding-left: 2.5rem;
+  padding-left: clamp(1.5rem, 4vw, 2.5rem);
   background: linear-gradient(to left, rgba(0,0,0,0.7), transparent);
   display: flex;
   align-items: center;
@@ -293,8 +303,22 @@ body {
   box-shadow: 0 0 10px rgba(255, 209, 0, 0.7);
 }
 
-/* Остатки media для названий месяцев */
+/* Media для мобильных */
 @media (max-width: 480px) {
   .full-name { display: none; }
   .short-name { display: block; }
+  .description {
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+    line-height: 1.3;
+  }
+  .title-corner {
+    max-width: 90vw;
+  }
+  .months-scroll {
+    gap: clamp(0.5rem, 2vw, 1rem);
+  }
+  .month-btn {
+    min-width: clamp(50px, 12vw, 80px);
+    padding: clamp(0.5rem, 2vw, 0.6rem) clamp(0.8rem, 3vw, 1rem);
+  }
 }

@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=B612:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+:root {
+  --vh: 1vh;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,7 +20,7 @@ body {
 .hero {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   overflow: hidden;
 }
 
@@ -29,7 +33,6 @@ body {
   overflow: hidden;
 }
 
-/* Плавный cross-fade видео - улучшена плавность, синхронизирована с таймаутом */
 .hero-video {
   position: absolute;
   top: -10%;
@@ -40,7 +43,7 @@ body {
   will-change: transform, opacity;
   transition: opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1);
   backface-visibility: hidden;
-  image-rendering: optimizeQuality; /* Улучшение качества видео */
+  image-rendering: optimizeQuality;
 }
 
 .video-current {
@@ -69,7 +72,7 @@ body {
   pointer-events: none;
 }
 
-/* Хедер - без изменений */
+/* Хедер — без изменений */
 .header {
   position: fixed;
   top: 0;
@@ -109,13 +112,13 @@ body {
   pointer-events: none;
 }
 
-/* Анимация текста - текст не исчезает полностью, а плавно тускнеет/сдвигается, улучшена плавность */
+/* Текст — адаптивный с clamp */
 .title-corner {
   position: absolute;
-  top: 160px;
-  left: 3rem;
+  top: clamp(130px, 18vh, 160px);
+  left: clamp(1rem, 4vw, 3rem);
   z-index: 2;
-  max-width: 600px;
+  max-width: clamp(300px, 80vw, 600px);
 }
 
 .title-group {
@@ -127,7 +130,7 @@ body {
   transform: translateY(0);
   transition:
     opacity 2s cubic-bezier(0.25, 0.1, 0.25, 1),
-    transform 2s cubic-bezier(0.25, 0.1, 0.25, 1); /* Синхронизировал с видео */
+    transform 2s cubic-bezier(0.25, 0.1, 0.25, 1);
   will-change: opacity, transform;
 }
 
@@ -137,12 +140,12 @@ body {
 }
 
 .title-group.fade-out {
-  opacity: 0; /* Полный fade-out, но с длинной анимацией для плавности */
+  opacity: 0;
   transform: translateY(-24px);
 }
 
 .main-title {
-  font-size: 4.5rem;
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
   font-weight: 700;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -151,19 +154,19 @@ body {
 }
 
 .subtitle {
-  font-size: 1.6rem;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
   font-weight: 400;
   opacity: 0.92;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-/* Кнопки месяцев - минималистичный стиль, удалены "детские" эффекты (glow), зум плавный без лагов */
+/* Панель месяцев — адаптивная */
 .months-bar {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 2rem 3rem 1.8rem;
+  padding: clamp(1.5rem, 5vw, 2rem) clamp(1.5rem, 5vw, 3rem) clamp(1.2rem, 4vw, 1.8rem);
   z-index: 2;
   background: linear-gradient(to top, rgba(0,0,0,0.75), transparent 70%);
   pointer-events: none;
@@ -171,14 +174,16 @@ body {
 
 .months-scroll {
   display: flex;
-  gap: 2.2rem;
+  gap: clamp(1rem, 4vw, 2.2rem);
   overflow-x: auto;
   padding: 0.5rem 0;
   scrollbar-width: none;
   pointer-events: auto;
   position: relative;
   scroll-behavior: smooth;
-  will-change: scroll-position; /* Оптимизация скролла */
+  will-change: scroll-position;
+  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+  scroll-snap-type: x proximity; /* Легкий snap */
 }
 
 .months-scroll::-webkit-scrollbar { display: none; }
@@ -187,28 +192,32 @@ body {
   background: none;
   border: none;
   color: #fff;
-  font-size: 1.15rem;
+  font-size: clamp(0.95rem, 3.5vw, 1.15rem);
   font-weight: 500;
-  padding: 0.7rem 1.2rem;
+  padding: clamp(0.6rem, 2.5vw, 0.7rem) clamp(1rem, 3.5vw, 1.2rem);
   cursor: pointer;
   white-space: nowrap;
   position: relative;
-  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.4s ease; /* Плавный easing для зума и цвета без лагов */
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), color 0.4s ease;
   opacity: 0.9;
   flex-shrink: 0;
   will-change: transform, color;
+  min-width: 60px; /* Удобнее нажимать на мобильных */
+  scroll-snap-align: center;
 }
 
-.month-btn:hover {
+.month-btn:hover,
+.month-btn:focus {
   opacity: 1;
-  color: #FFD100; /* Простой цвет без glow */
-  transform: scale(1.05); /* Минимальный зум, плавный */
+  color: #FFD100;
+  transform: scale(1.08);
+  outline: none;
 }
 
 .month-btn.active {
   color: #ff1100;
   font-weight: 700;
-  transform: scale(1.05); /* Легкий зум для active */
+  transform: scale(1.08);
 }
 
 .month-btn.active::after {
@@ -272,23 +281,8 @@ body {
   box-shadow: 0 0 10px rgba(255, 209, 0, 0.7);
 }
 
-/* Адаптив */
-@media (max-width: 1024px) {
-  .main-title { font-size: 3.8rem; }
-  .title-corner { top: 140px; left: 2.5rem; }
-}
-
-@media (max-width: 768px) {
-  .title-corner { top: 130px; left: 2rem; }
-  .main-title { font-size: 3.4rem; }
-  .subtitle { font-size: 1.5rem; }
-}
-
+/* Остатки media для названий месяцев */
 @media (max-width: 480px) {
-  .title-corner { top: 110px; left: 1.5rem; max-width: 90%; }
-  .main-title { font-size: 2.8rem; }
-  .subtitle { font-size: 1.3rem; }
   .full-name { display: none; }
   .short-name { display: block; }
-  .month-btn { font-size: 1.1rem; }
 }

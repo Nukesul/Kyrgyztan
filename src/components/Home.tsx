@@ -29,6 +29,16 @@ function Home() {
   const [scrollProgress, setScrollProgress] = useState(0);
   const videoContainerRef = useRef<HTMLDivElement>(null);
 
+  // Исправляем 100vh на мобильных (особенно iOS)
+  useEffect(() => {
+    const setVh = () => {
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    };
+    setVh();
+    window.addEventListener('resize', setVh);
+    return () => window.removeEventListener('resize', setVh);
+  }, []);
+
   // Изменение месяца с плавным cross-fade
   const handleMonthChange = (month: typeof months[0]) => {
     if (month.id === currentMonth.id) return;
@@ -38,7 +48,7 @@ function Home() {
     setTimeout(() => {
       setPreviousMonth(null);
       setIsFading(false);
-    }, 2000); // Синхронизировал с длительностью анимации видео (2s)
+    }, 2000);
   };
 
   // Прогресс скролла
@@ -57,7 +67,7 @@ function Home() {
     return () => elem.removeEventListener('scroll', updateProgress);
   }, []);
 
-  // Mouse parallax effect (only for non-touch) - улучшена плавность, добавлен эффект "шарообразности" через нелинейное отображение
+  // Mouse parallax effect (only for non-touch)
   useEffect(() => {
     const container = videoContainerRef.current;
     if (!container || 'ontouchstart' in window || navigator.maxTouchPoints > 0) return;
@@ -67,14 +77,13 @@ function Home() {
       const rect = container.getBoundingClientRect();
       let x = (e.clientX - rect.left) / rect.width - 0.5;
       let y = (e.clientY - rect.top) / rect.height - 0.5;
-      // Добавляем "шарообразный" эффект: нелинейное отображение для имитации кривизны
       const dist = Math.sqrt(x * x + y * y);
-      const curveFactor = 1 + dist * 0.5; // Легкая кривизна
+      const curveFactor = 1 + dist * 0.5;
       x *= curveFactor;
       y *= curveFactor;
       targetX = x * 45;
       targetY = y * 45;
-      targetScale = 1 + dist * 0.12; // Динамический scale на основе расстояния для "линзы"
+      targetScale = 1 + dist * 0.12;
     };
     const handleMouseLeave = () => {
       targetX = targetY = 0;
@@ -82,12 +91,12 @@ function Home() {
     };
     let rafId: number | null = null;
     const animate = () => {
-      currentX += (targetX - currentX) * 0.15; // Увеличил коэффициент для большей плавности (меньше лагов)
+      currentX += (targetX - currentX) * 0.15;
       currentY += (targetY - currentY) * 0.15;
       currentScale += (targetScale - currentScale) * 0.15;
       container.querySelectorAll('.hero-video').forEach((video) => {
         (video as HTMLElement).style.transform = `translate(${currentX}px, ${currentY}px) scale(${currentScale})`;
-        (video as HTMLElement).style.transition = 'transform 0.1s ease-out'; // Добавил легкий transition для сглаживания
+        (video as HTMLElement).style.transition = 'transform 0.1s ease-out';
       });
       rafId = requestAnimationFrame(animate);
     };
@@ -101,7 +110,7 @@ function Home() {
     };
   }, []);
 
-  // Прелоад следующего видео - добавлен прелоад текущего для начальной загрузки
+  // Прелоад видео
   useEffect(() => {
     const preloadVideo = (videoName: string) => {
       const url = `${VIDEO_BASE_URL}${videoName}`;
@@ -109,9 +118,9 @@ function Home() {
       v.preload = 'auto';
       v.src = url;
     };
-    preloadVideo(currentMonth.video); // Прелоад текущего
+    preloadVideo(currentMonth.video);
     const nextIndex = (currentMonth.id % months.length);
-    preloadVideo(months[nextIndex].video); // Прелоад следующего
+    preloadVideo(months[nextIndex].video);
   }, [currentMonth]);
 
   return (

@@ -112,6 +112,7 @@ function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const videoContainerRef = useRef<HTMLDivElement>(null);
+  const currentVideoRef = useRef<HTMLVideoElement>(null);
 
   // Исправляем 100vh на мобильных (особенно iOS)
   useEffect(() => {
@@ -133,6 +134,14 @@ function Home() {
       setPreviousMonth(null);
       setIsFading(false);
     }, 2000);
+  };
+
+  // Авто-переключение на следующий месяц по окончании видео
+  const handleVideoEnded = () => {
+    let nextId = currentMonth.id + 1;
+    if (nextId > 12) nextId = 1;
+    const nextMonth = months.find(m => m.id === nextId)!;
+    handleMonthChange(nextMonth);
   };
 
   // Прогресс скролла
@@ -221,7 +230,6 @@ function Home() {
               className={`hero-video video-previous ${isFading ? 'fade-out' : ''}`}
               autoPlay
               muted
-              loop
               playsInline
               preload="auto"
               key={`prev-${previousMonth.id}`}
@@ -230,12 +238,13 @@ function Home() {
             </video>
           )}
           <video
+            ref={currentVideoRef}
             className={`hero-video video-current ${previousMonth ? 'fade-in' : ''}`}
             autoPlay
             muted
-            loop
             playsInline
             preload="auto"
+            onEnded={handleVideoEnded}
             key={`curr-${currentMonth.id}`}
           >
             <source src={`${VIDEO_BASE_URL}${currentMonth.video}`} type="video/mp4" />

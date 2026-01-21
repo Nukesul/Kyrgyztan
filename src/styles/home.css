@@ -175,6 +175,7 @@ body {
   overflow-wrap: break-word;
   word-break: break-word;
   hyphens: auto;
+  white-space: normal;
 }
 
 /* Панель месяцев — улучшенная адаптивность, профессиональный вид */
